@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+<script>(function(){try{var s=localStorage.getItem('spgi-theme')||'dark';document.documentElement.setAttribute('data-theme',s);}catch(e){}})();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P Global (SPGI) — Análise Competitiva Estratégica 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Dark master palette */
+            --bg:          #0a0f1f;
+            --bg-2:        #0f1629;
+            --bg-3:        #141d35;
+            --bg-card:     #101830;
+            --border:      #1f2d4d;
+            --border-strong:#2a3d63;
+            --text:        #e6ecf5;
+            --text-2:      #a3b3cc;
+            --text-3:      #6b7a99;
+            --brand:       var(--blue);
+            --brand-dark:  #1e3a8a;
+            --brand-light: #1a2545;
+            --gold:        var(--gold);
+            --gold-light:  #2e240e;
+            --green:       var(--green);
+            --green-light: #0e2e1f;
+            --red:         var(--red);
+            --red-light:   #2e0e14;
+            --blue:        var(--blue);
+            --blue-light:  #0e1f3a;
+            --cyan:        var(--cyan);
+            --orange:      var(--orange);
+            --purple:      var(--purple);
+            --pink:        var(--pink);
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        /* NAV */
+        #topnav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(15,22,41,.94);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-2);
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+            text-decoration: none;
+            border: none;
+            background: none;
+        }
+        .nav-link:hover { background: var(--brand-light); color: var(--brand); }
+        .nav-link.active { background: var(--brand-light); color: var(--brand); font-weight: 600; }
+
+        /* CARDS */
+        .card {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.04);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: box-shadow .2s, transform .2s;
+        }
+        .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.09); transform: translateY(-2px); }
+        .kpi-card { border-left: 4px solid var(--brand); }
+
+        /* TITLES */
+        .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+        .section-sub   { font-size: 0.82rem; color: var(--text-3); margin-bottom: 1.4rem; }
+
+        /* TABLE */
+        thead th {
+            background: var(--bg-2);
+            font-size: 0.68rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--text-3);
+            font-weight: 600;
+            padding: 0.8rem 1rem;
+        }
+        tbody td { padding: 0.8rem 1rem; font-size: 0.83rem; }
+        tbody tr:hover { background: var(--bg-2); }
+        .tbl-logo { width: 18px; height: 18px; border-radius: 3px; object-fit: contain; flex-shrink: 0; }
+
+        /* LOGO INITIALS BADGE (fallback) */
+        .logo-badge {
+            width: 22px; height: 22px; border-radius: 4px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.6rem; font-weight: 800; color: white;
+            flex-shrink: 0;
+        }
+
+        /* TAGS */
+        .tag {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: var(--bg-3); border: 1px solid var(--border-strong);
+            padding: 3px 10px; border-radius: 99px;
+            font-size: 0.77rem; font-weight: 500; color: var(--text-2);
+        }
+        .tag img { height: 14px; width: 14px; border-radius: 2px; object-fit: contain; }
+
+        /* MOAT */
+        .moat-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* SWOT */
+        .swot-box { border-radius: 12px; padding: 1.25rem; }
+        .swot-letter {
+            width: 34px; height: 34px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 900; flex-shrink: 0;
+        }
+        .swot-item { display: flex; gap: 8px; align-items: flex-start; font-size: 0.82rem; line-height: 1.45; }
+        .swot-dot { width: 6px; height: 6px; border-radius: 99px; margin-top: 5px; flex-shrink: 0; }
+
+        /* CHART */
+        .chart-wrap { position: relative; }
+
+        /* TOOLTIP */
+        [data-tip] { position: relative; cursor: help; }
+        [data-tip]:hover::after {
+            content: attr(data-tip);
+            position: absolute; bottom: 115%; left: 50%;
+            transform: translateX(-50%);
+            background: var(--text); color: white;
+            font-size: 0.7rem; padding: 4px 9px; border-radius: 6px;
+            white-space: nowrap; z-index: 99; pointer-events: none;
+        }
+
+        /* SEGMENT MINI STATS */
+        .seg-stat { background: var(--bg-2); border-radius: 10px; padding: 0.65rem 0.75rem; text-align: center; }
+        .seg-stat-val { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+        .seg-stat-lbl { font-size: 0.68rem; color: var(--text-3); margin-top: 1px; }
+
+        /* MARKET DARK CARD */
+        .dark-card { background: var(--text); border-radius: 14px; overflow: hidden; }
+        .dark-row { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.83rem; }
+        .dark-row:last-child { border-bottom: none; }
+
+        @media print { #topnav { display: none; } body { background: white; } .card:hover { transform: none; } }
+/* === Tailwind utilities re-mapped to dark master palette === */
+ {background-color:var(--bg-card)!important}
+ {background-color:var(--bg-3)!important}
+ {background-color:var(--bg-3)!important}
+ {background-color:var(--bg-2)!important}
+ {background-color:var(--blue-light)!important}
+ {background-color:var(--green-light)!important}
+ {background-color:var(--red-light)!important}
+ {background-color:var(--gold-light)!important}
+ {background-color:rgba(251,146,60,.12)!important}
+ {background-color:rgba(192,132,252,.12)!important}
+ {background-color:rgba(244,114,182,.12)!important}
+ {color:var(--text)!important}
+ {color:var(--text)!important}
+ {color:var(--text-2)!important}
+ {color:var(--text-3)!important}
+ {color:var(--blue)!important}
+ {color:var(--cyan)!important}
+ {color:var(--green)!important}
+ {color:var(--red)!important}
+ {color:var(--gold)!important}
+ {color:var(--orange)!important}
+ {color:var(--purple)!important}
+ {color:var(--pink)!important}
+ {border-color:var(--border)!important}
+ {border-color:var(--border-strong)!important}
+ {border-color:rgba(96,165,250,.4)!important}
+ {border-color:rgba(52,211,153,.4)!important}
+ {border-color:rgba(248,113,113,.4)!important}
+ {border-color:rgba(251,191,36,.4)!important}
+ {border-color:rgba(192,132,252,.4)!important}
+ {border-color:var(--border)!important}
+ {border-color:var(--border)!important}
+ {box-shadow:0 4px 14px rgba(0,0,0,.4)!important}
+/* ============================================================
+   LIGHT MODE OVERRIDES (toggle via [data-theme="light"])
+   ============================================================ */
+[data-theme="light"] {
+  --bg:#f5f7fa;
+  --bg-2:#ffffff;
+  --bg-3:#f1f5f9;
+  --bg-card:#ffffff;
+  --border:#e2e8f0;
+  --border-strong:#cbd5e1;
+  --text:#0f172a;
+  --text-2:#475569;
+  --text-3:#94a3b8;
+  --brand:#1d4ed8;
+  --brand-d:#1e3a8a;
+  --brand-dark:#1e3a8a;
+  --brand-l:#dbeafe;
+  --brand-light:#dbeafe;
+  --gold:#b45309;
+  --gold-l:#fef3c7;
+  --gold-light:#fef3c7;
+  --green:#059669;
+  --green-l:#d1fae5;
+  --green-light:#d1fae5;
+  --red:#dc2626;
+  --red-l:#fee2e2;
+  --red-light:#fee2e2;
+  --blue:#1d4ed8;
+  --blue-l:#dbeafe;
+  --blue-light:#dbeafe;
+  --cyan:#0891b2;
+  --cyan-l:#cffafe;
+  --orange:#ea580c;
+  --orange-l:#fed7aa;
+  --purple:#7c3aed;
+  --purple-l:#ede9fe;
+  --pink:#db2777;
+  /* Risk severity (light mode) */
+  --c-crit:#dc2626;--c-high:#ea580c;--c-mod:#ca8a04;--c-low:#16a34a;
+  --bg-crit:#fee2e2;--bg-high:#ffedd5;--bg-mod:#fef9c3;--bg-low:#dcfce7;
+  --cell-crit:#fca5a5;--cell-high:#fdba74;--cell-mod:#fde68a;--cell-low:#86efac;
+  /* Modelo's color-* tokens (only relevant for that file) */
+  --color-bg:#f5f7fa;
+  --color-surface:#ffffff;
+  --color-surface-2:#ffffff;
+  --color-surface-offset:#f1f5f9;
+  --color-divider:#e2e8f0;
+  --color-border:#cbd5e1;
+  --color-text:#0f172a;
+  --color-text-muted:#475569;
+  --color-text-faint:#94a3b8;
+  --color-primary:#1d4ed8;
+  --color-primary-hover:var(--blue);
+  --color-primary-light:#dbeafe;
+  --color-accent-blue:#1d4ed8;
+  --color-accent-blue-light:#dbeafe;
+  --color-accent-green:#059669;
+  --color-accent-green-light:#d1fae5;
+  --color-accent-amber:#b45309;
+  --color-accent-amber-light:#fef3c7;
+  --color-accent-rose:#be123c;
+  --color-accent-rose-light:#fce7f3;
+  --color-accent-indigo:#7c3aed;
+  --color-accent-indigo-light:#ede9fe;
+  /* Legacy grey aliases (Saude) */
+  --grey-9:#0f172a;--grey-7:#475569;--grey-5:#94a3b8;--grey-3:#cbd5e1;
+  --grey-1:#f1f5f9;--grey-0:#f8fafc;
+}
+[data-theme="light"] body,
+[data-theme="light"] html { background: var(--bg); color: var(--text); }
+
+
+    
+/* ============================================================
+   LIGHT MODE - polish for Concorrencia
+   ============================================================ */
+[data-theme="light"] #topnav{background:rgba(255,255,255,.95)!important;border-bottom-color:var(--border)!important}
+[data-theme="light"] .nav-link{color:var(--text-2)}
+[data-theme="light"] .card{background:var(--bg-card);border-color:var(--border)}
+[data-theme="light"] .swot-item p{color:var(--text)}
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ────────────────────────────────────────────────
+     NAV
+──────────────────────────────────────────────── -->
+<nav id="topnav">
+    <div class="max-w-7xl mx-auto px-4 flex items-center gap-1 py-2 overflow-x-auto">
+
+        <!-- Logo área nav -->
+        <div class="flex items-center gap-2 mr-5 flex-shrink-0">
+            <div class="logo-badge" style="background:var(--blue); width:28px; height:28px; border-radius:6px; font-size:0.65rem;">SP</div>
+            <span class="font-bold text-sm text-slate-800 hidden sm:block">S&amp;P Global</span>
+        </div>
+
+        <button class="nav-link" onclick="goTo('kpis')">KPIs 2025</button>
+        <button class="nav-link" onclick="goTo('segmentos')">Segmentos</button>
+        <button class="nav-link" onclick="goTo('moat')">Moat</button>
+        <button class="nav-link" onclick="goTo('comparacao')">Comparativo</button>
+        <button class="nav-link" onclick="goTo('swot')">SWOT</button>
+        <button class="nav-link" onclick="goTo('mercado')">Reação de Mercado</button>
+    </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+<!-- ────────────────────────────────────────────────
+     HEADER
+──────────────────────────────────────────────── -->
+<header class="mb-10">
+    <div class="card p-6 sm:p-8" style="background: linear-gradient(135deg, var(--brand-d) 0%, var(--blue) 55%, var(--cyan) 100%);">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+            <div>
+                <div class="flex items-center gap-3 mb-3">
+                    <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:10px;">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="36" height="36" rx="8" fill="white" fill-opacity="0.1"/>
+                            <text x="18" y="25" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="13" fill="white">SP</text>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">S&amp;P Global Inc. <span class="text-blue-300 font-light">(NYSE: SPGI)</span></h1>
+                        <p class="text-blue-200 text-sm font-medium mt-0.5">Análise Competitiva Estratégica &nbsp;·&nbsp; Setor: Dados Financeiros &amp; Analítica</p>
+                    </div>
+                </div>
+                <p class="text-blue-100 text-sm leading-relaxed max-w-2xl mt-2">
+                    Relatório baseado nos resultados oficiais do exercício fiscal 2025 (Form 10-K / SEC EDGAR), <em>earnings call</em> Q4 2025 e dados de mercado consolidados com referência a Abril de 2026. Cobre posicionamento competitivo por segmento, vantagens estruturais, benchmarking financeiro e reação do mercado.
+                </p>
+            </div>
+            <div class="flex flex-col gap-2 flex-shrink-0 sm:items-end">
+                <span style="background:rgba(255,255,255,0.18); color:white; font-size:0.72rem; font-weight:600; padding:5px 12px; border-radius:99px;">Relatório Estratégico</span>
+                <span style="background:rgba(255,255,255,0.08); color:var(--blue-light); font-size:0.72rem; padding:5px 12px; border-radius:99px;">Atualizado: Abril 2026</span>
+                <span style="background:rgba(255,255,255,0.08); color:var(--blue-light); font-size:0.72rem; padding:5px 12px; border-radius:99px;">52 anos — Dividend King</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<!-- ────────────────────────────────────────────────
+     KPIs
+──────────────────────────────────────────────── -->
+<section id="kpis" class="mb-12">
+    <p class="section-title">Destaques Financeiros — Ano Fiscal 2025</p>
+    <p class="section-sub">Resultados reportados em fevereiro de 2026 · Comparações face ao exercício fiscal 2024</p>
+
+    <!-- Row 1 – primary KPIs -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div class="card kpi-card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Receita Total</p>
+            <p class="text-2xl font-extrabold text-slate-900">$15.34B</p>
+            <p class="text-xs text-emerald-600 font-semibold mt-1.5">↑ +8.0% YoY</p>
+            <p class="text-xs text-slate-400 mt-0.5">vs. $14.21B em 2024</p>
+        </div>
+        <div class="card kpi-card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">EPS Ajustado (Diluído)</p>
+            <p class="text-2xl font-extrabold text-slate-900">$17.83</p>
+            <p class="text-xs text-emerald-600 font-semibold mt-1.5">↑ +14.0% YoY</p>
+            <p class="text-xs text-slate-400 mt-0.5">Guia 2026: $19.40–$19.65</p>
+        </div>
+        <div class="card kpi-card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Margem Oper. Ajustada</p>
+            <p class="text-2xl font-extrabold text-slate-900">50.4%</p>
+            <p class="text-xs text-emerald-600 font-semibold mt-1.5">↑ +140 bps expansão</p>
+            <p class="text-xs text-slate-400 mt-0.5">Meta 2026: ~51–52%</p>
+        </div>
+        <div class="card kpi-card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Retorno ao Acionista</p>
+            <p class="text-2xl font-extrabold text-slate-900">$6.2B</p>
+            <p class="text-xs text-slate-500 font-semibold mt-1.5">Dividendos + Recompras</p>
+            <p class="text-xs text-slate-400 mt-0.5">Programa buyback ativo: $5B</p>
+        </div>
+    </div>
+
+    <!-- Row 2 – secondary KPIs -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Free Cash Flow</p>
+            <p class="text-xl font-bold text-slate-900">~$5.1B</p>
+            <p class="text-xs text-emerald-600 font-medium mt-1">FCF Yield ~3.9%</p>
+            <p class="text-xs text-slate-400 mt-0.5">Conversão &gt;90% lucro liq. aj.</p>
+        </div>
+        <div class="card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Receita Recorrente</p>
+            <p class="text-xl font-bold text-slate-900">&gt;75%</p>
+            <p class="text-xs text-slate-500 font-medium mt-1">Subscriptions + AUM fees</p>
+            <p class="text-xs text-slate-400 mt-0.5">Alta previsibilidade de cash flow</p>
+        </div>
+        <div class="card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Dividend Yield</p>
+            <p class="text-xl font-bold text-slate-900">~0.9%</p>
+            <p class="text-xs text-emerald-600 font-medium mt-1">52 anos consecutivos ↑</p>
+            <p class="text-xs text-slate-400 mt-0.5">Div. anual est.: ~$3.84/ação</p>
+        </div>
+        <div class="card p-5">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Market Cap (Abr. 2026)</p>
+            <p class="text-xl font-bold text-slate-900">~$132B</p>
+            <p class="text-xs text-slate-500 font-medium mt-1">P/E ~29.8x · EV/EBITDA ~22x</p>
+            <p class="text-xs text-slate-400 mt-0.5">Abaixo da média histórica 5a</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────
+     SEGMENTOS
+──────────────────────────────────────────────── -->
+<section id="segmentos" class="mb-12">
+    <p class="section-title">Panorama Competitivo por Segmento de Negócio</p>
+    <p class="section-sub">Cinco divisões operacionais com dinâmicas de mercado, margens e concorrência distintas</p>
+    <div class="space-y-5">
+
+        <!-- ① Ratings -->
+        <div class="card p-6">
+            <div class="flex flex-col sm:flex-row gap-5">
+                <div class="flex-1">
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span style="background:var(--blue-light); color:var(--blue); font-size:0.7rem; font-weight:700; padding:2px 10px; border-radius:99px;">OLIGOPÓLIO REGULADO</span>
+                        <span style="background:var(--bg-3); color:var(--text-2); font-size:0.7rem; padding:2px 8px; border-radius:99px;">~35% da receita total</span>
+                        <span style="background:var(--green-light); color:var(--green); font-size:0.7rem; font-weight:600; padding:2px 8px; border-radius:99px;">Maior margem SPGI</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">1. S&amp;P Global Ratings</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        O segmento mais lucrativo e de crescimento mais cíclico. Opera num oligopólio globalmente protegido pelo estatuto <strong>NRSRO</strong> (Nationally Recognized Statistical Rating Organization) concedido pela SEC. Em 2025, spreads de crédito comprimidos e volumes recorde de refinanciamentos corporativos impulsionaram crescimento de dois dígitos. A emissão de dívida estruturada (CLOs, ABS, CMBS) recuperou fortemente, expandindo as receitas de transação. O modelo <em>issuer-pays</em> gera margens brutas superiores a 60% — nenhum novo entrante conseguiu escala suficiente para ameaçar o duopólio S&amp;P/Moody's nos últimos 50 anos.
+                    </p>
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="seg-stat"><p class="seg-stat-val">~$5.4B</p><p class="seg-stat-lbl">Receita 2025</p></div>
+                        <div class="seg-stat"><p class="seg-stat-val">~60%+</p><p class="seg-stat-lbl">Margem op. est.</p></div>
+                        <div class="seg-stat"><p class="seg-stat-val text-emerald-700">+14% YoY</p><p class="seg-stat-lbl">Crescimento 2025</p></div>
+                    </div>
+                    <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">Concorrentes &amp; Dinâmica de Mercado</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag">
+                            <img src="https://www.google.com/s2/favicons?domain=moodys.com&sz=32" alt="MCO">
+                            Moody's Investors Service — principal rival (~40% quota)
+                        </span>
+                        <span class="tag">
+                            <img src="https://www.google.com/s2/favicons?domain=fitchratings.com&sz=32" alt="Fitch">
+                            Fitch Ratings — terceiro incumbente (~14% quota)
+                        </span>
+                        <span class="tag">DBRS Morningstar — nicho Canadá &amp; EU</span>
+                        <span class="tag">Kroll Bond Rating Agency (KBRA)</span>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 w-full sm:w-48">
+                    <div class="chart-wrap" style="height:150px;"><canvas id="chartRatingsShare"></canvas></div>
+                    <p class="text-center text-xs text-slate-400 mt-1">Quota de mercado global est.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ② Market Intelligence -->
+        <div class="card p-6">
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span style="background:rgba(192,132,252,.15); color:var(--purple); font-size:0.7rem; font-weight:700; padding:2px 10px; border-radius:99px;">DADOS &amp; WORKFLOW</span>
+                <span style="background:var(--bg-3); color:var(--text-2); font-size:0.7rem; padding:2px 8px; border-radius:99px;">~28% da receita total</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">2. S&amp;P Global Market Intelligence</h3>
+            <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                Plataforma de dados, research e analítica para bancos de investimento, gestoras de ativos, M&amp;A e gestão de risco. O <strong>Capital IQ Pro</strong> é o produto central — integrado nos fluxos de trabalho de dezenas de milhares de analistas globalmente. Em 2024–25, a divisão reforçou o posicionamento em <strong>mercados privados</strong> com as aquisições da <strong>Visible Alpha</strong> (consenso de estimativas sell-side) e <strong>With Intelligence</strong> (dados alternativos de hedge funds). A expansão para private equity, private credit e infraestrutura é a aposta estratégica de longo prazo, face ao crescimento exponencial dos ativos alternativos globais (&gt;$13T em AUM). O <strong>Capital IQ Copilot</strong> — interface GenAI lançada em 2025 — permite pesquisa em linguagem natural, resumos automáticos de filings SEC e geração de análises. Diferencial competitivo crescente face ao Bloomberg Terminal.
+            </p>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="seg-stat"><p class="seg-stat-val">~$4.3B</p><p class="seg-stat-lbl">Receita 2025</p></div>
+                <div class="seg-stat"><p class="seg-stat-val">~35%</p><p class="seg-stat-lbl">Margem op. est.</p></div>
+                <div class="seg-stat"><p class="seg-stat-val text-emerald-700">+5% YoY</p><p class="seg-stat-lbl">Crescimento orgânico</p></div>
+            </div>
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">Concorrentes &amp; Posicionamento</p>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag"><img src="https://www.google.com/s2/favicons?domain=bloomberg.com&sz=32" alt="Bloomberg">Bloomberg Terminal (~$32K/ano por assento)</span>
+                <span class="tag"><img src="https://www.google.com/s2/favicons?domain=lseg.com&sz=32" alt="LSEG">LSEG / Refinitiv Workspace</span>
+                <span class="tag"><img src="https://www.google.com/s2/favicons?domain=factset.com&sz=32" alt="FactSet">FactSet Research Systems</span>
+                <span class="tag"><img src="https://www.google.com/s2/favicons?domain=morningstar.com&sz=32" alt="Morningstar">Morningstar Direct</span>
+                <span class="tag">PitchBook (private markets)</span>
+                <span class="tag">Preqin (alternatives)</span>
+                <span class="tag">AlphaSense (LLM-nativo)</span>
+                <span class="tag">Tegus (expert networks)</span>
+            </div>
+        </div>
+
+        <!-- ③ Dow Jones Indices -->
+        <div class="card p-6">
+            <div class="flex flex-col sm:flex-row gap-5">
+                <div class="flex-1">
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span style="background:var(--green-light); color:var(--green); font-size:0.7rem; font-weight:700; padding:2px 10px; border-radius:99px;">ÍNDICES &amp; IP</span>
+                        <span style="background:var(--bg-3); color:var(--text-2); font-size:0.7rem; padding:2px 8px; border-radius:99px;">~14% da receita · margens &gt;70%</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">3. S&amp;P Dow Jones Indices</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Segmento com as margens mais elevadas de toda a empresa e modelo de receita estruturalmente defensivo. Detém a propriedade intelectual do <strong>S&amp;P 500</strong>, do <strong>Dow Jones Industrial Average</strong> e de mais de <strong>1 milhão de índices</strong> proprietários. Cobra <em>basis points</em> sobre os AUM vinculados — cerca de <strong>$16 triliões</strong> em fundos passivos referenciam os seus benchmarks. À medida que mercados sobem ou fluxos para ETFs aumentam, a receita cresce automaticamente sem custo marginal adicional. A SPGI detém ~73% da joint venture com CME Group. A migração secular para gestão passiva é uma macrotendência de longo prazo que beneficia diretamente este segmento.
+                    </p>
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="seg-stat"><p class="seg-stat-val">~$2.1B</p><p class="seg-stat-lbl">Receita 2025</p></div>
+                        <div class="seg-stat"><p class="seg-stat-val">~70%+</p><p class="seg-stat-lbl">Margem op. est.</p></div>
+                        <div class="seg-stat"><p class="seg-stat-val text-emerald-700">+9% YoY</p><p class="seg-stat-lbl">AUM-linked fees</p></div>
+                    </div>
+                    <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">Concorrentes &amp; Dinâmica</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag"><img src="https://www.google.com/s2/favicons?domain=msci.com&sz=32" alt="MSCI">MSCI Inc. — foco EM, ESG, Fatores</span>
+                        <span class="tag"><img src="https://www.google.com/s2/favicons?domain=lseg.com&sz=32" alt="LSEG">FTSE Russell (LSEG) — referência UK/global</span>
+                        <span class="tag"><img src="https://www.google.com/s2/favicons?domain=bloomberg.com&sz=32" alt="Bloomberg">Bloomberg Indices — fixed income</span>
+                        <span class="tag">Solactive — ETF boutique (baixo custo)</span>
+                        <span class="tag">Morningstar Indexes — ESG niche</span>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 w-full sm:w-48">
+                    <div class="chart-wrap" style="height:150px;"><canvas id="chartIndicesShare"></canvas></div>
+                    <p class="text-center text-xs text-slate-400 mt-1">AUM referenciados — est. ($T)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ④ + ⑤ grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- ④ Commodity Insights -->
+            <div class="card p-6">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                    <span style="background:rgba(251,146,60,.15); color:var(--orange); font-size:0.7rem; font-weight:700; padding:2px 10px; border-radius:99px;">ENERGIA &amp; COMMODITIES</span>
+                    <span style="background:var(--bg-3); color:var(--text-2); font-size:0.7rem; padding:2px 8px; border-radius:99px;">~13% da receita</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 mb-2">4. Commodity Insights (ex-Platts)</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    Benchmarks de preço globalmente reconhecidos para petróleo, gás, energia elétrica, metais preciosos e agricultura. Os preços Platts são referência contratual nos mercados físicos mundiais — muitos contratos derivativos e físicos especificam explicitamente o preço Platts como referência. Expansão crescente para dados de transição energética (carbono voluntário, hidrogénio verde, renováveis). A integração com os ativos IHS Markit criou uma oferta única de analytics de upstream e supply chain.
+                </p>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="seg-stat"><p class="seg-stat-val">~$2.0B</p><p class="seg-stat-lbl">Receita 2025</p></div>
+                    <div class="seg-stat"><p class="seg-stat-val text-emerald-700">+6% YoY</p><p class="seg-stat-lbl">Crescimento</p></div>
+                </div>
+                <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">Concorrentes</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="tag">Wood Mackenzie (Verisk)</span>
+                    <span class="tag">Argus Media</span>
+                    <span class="tag">OPIS (Dow Jones subsidiary)</span>
+                    <span class="tag">Rystad Energy</span>
+                    <span class="tag">Energy Intelligence</span>
+                </div>
+            </div>
+
+            <!-- ⑤ Mobility -->
+            <div class="card p-6">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                    <span style="background:rgba(34,211,238,.15); color:var(--cyan); font-size:0.7rem; font-weight:700; padding:2px 10px; border-radius:99px;">AUTOMÓVEL &amp; MOBILIDADE</span>
+                    <span style="background:var(--bg-3); color:var(--text-2); font-size:0.7rem; padding:2px 8px; border-radius:99px;">~10% da receita</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 mb-2">5. S&amp;P Global Mobility</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    Dados de registo de veículos, previsões de produção automóvel global, supply chain e histórico de veículos (Carfax). Bases de dados praticamente irreplicáveis — construídas ao longo de décadas de parcerias com entidades governamentais de registo. A transição para veículos elétricos (EV), a reestruturação das cadeias de fornecimento e os novos requisitos de compliance regulatório são vetores de crescimento. Inclui também dados de seguros automóvel e analytics de frotas comerciais.
+                </p>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="seg-stat"><p class="seg-stat-val">~$1.5B</p><p class="seg-stat-lbl">Receita 2025</p></div>
+                    <div class="seg-stat"><p class="seg-stat-val text-emerald-700">+4% YoY</p><p class="seg-stat-lbl">Crescimento</p></div>
+                </div>
+                <p class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-2">Concorrentes</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="tag"><img src="https://www.google.com/s2/favicons?domain=experian.com&sz=32" alt="Experian">Experian Automotive</span>
+                    <span class="tag"><img src="https://www.google.com/s2/favicons?domain=equifax.com&sz=32" alt="Equifax">Equifax Auto</span>
+                    <span class="tag">J.D. Power &amp; Associates</span>
+                    <span class="tag">Cox Automotive</span>
+                    <span class="tag">LexisNexis Risk Solutions</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI callout -->
+        <div class="card p-6" style="background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%); border-color:var(--border);">
+            <div class="flex items-center gap-3 mb-4">
+                <div style="background:rgba(96,165,250,0.15); border-radius:10px; padding:8px;">
+                    <svg class="w-5 h-5" style="color:var(--blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold">Iniciativa IA Transversal: Kensho &amp; Capital IQ Copilot</h4>
+                    <p class="text-slate-400 text-xs">Vetor de diferenciação competitiva e expansão de margens para 2026–2028</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div style="background:rgba(255,255,255,0.05); border-radius:10px; padding:14px;">
+                    <p class="text-blue-300 text-xs font-semibold uppercase tracking-wide mb-1.5">Kensho Technologies</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">Adquirida em 2018 ($550M). Motor proprietário de IA e NLP integrado em todos os segmentos. Alimenta pesquisa semântica, extração de dados não estruturados, alertas automáticos e classificação de documentos regulatórios em escala.</p>
+                </div>
+                <div style="background:rgba(255,255,255,0.05); border-radius:10px; padding:14px;">
+                    <p class="text-blue-300 text-xs font-semibold uppercase tracking-wide mb-1.5">Capital IQ Copilot</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">Interface conversacional GenAI lançada em 2025 sobre o corpus de dados do Capital IQ Pro. Pesquisa em linguagem natural, resumos automáticos de filings SEC/10-K, geração de análises comparativas e modelos financeiros. Principal alavanca de diferenciação vs. Bloomberg Terminal.</p>
+                </div>
+                <div style="background:rgba(255,255,255,0.05); border-radius:10px; padding:14px;">
+                    <p class="text-blue-300 text-xs font-semibold uppercase tracking-wide mb-1.5">Estratégia IA 2026–2028</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">Investimento &gt;$500M em IA/ML. Foco em automação de ratings preliminares, índices personalizados gerados por IA, e analytics preditivos em Commodity Insights. A IA é encarada como alavanca de expansão de margens — não de substituição de analistas.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────
+     MOAT
+──────────────────────────────────────────────── -->
+<section id="moat" class="mb-12">
+    <p class="section-title">Vantagens Competitivas Estruturais (Economic Moat)</p>
+    <p class="section-sub">A SPGI possui um <strong>"Wide Moat"</strong> — vantagens estruturais entre as mais defensivas do universo do S&amp;P 500</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div class="card p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="moat-icon" style="background:var(--blue-light);">
+                    <svg class="w-5 h-5" style="color:var(--blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900">Efeitos de Rede</h4>
+                    <span style="background:var(--blue-light); color:var(--blue); font-size:0.65rem; font-weight:700; padding:1px 7px; border-radius:99px;">MUITO FORTE</span>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">No segmento de Ratings, os investidores institucionais exigem notações S&amp;P/Moody's como condição de acesso a capital. Os emissores pagam porque o mercado o exige. Este ciclo auto-reforçante existe há mais de 160 anos e demonstrou ser praticamente impenetrável — nenhum novo entrante conseguiu escala significativa nas últimas décadas.</p>
+        </div>
+
+        <div class="card p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="moat-icon" style="background:rgba(192,132,252,.15);">
+                    <svg class="w-5 h-5" style="color:var(--purple);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900">Ativos Intangíveis &amp; Marca</h4>
+                    <span style="background:rgba(192,132,252,.15); color:var(--purple); font-size:0.65rem; font-weight:700; padding:1px 7px; border-radius:99px;">EXCECIONAL</span>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">A marca "S&amp;P 500" é o benchmark central das finanças americanas — um ativo intangível de valor incalculável. O estatuto NRSRO é uma barreira regulatória governamental que cimenta a posição da SPGI. Séries históricas de dados com décadas de profundidade (preços Platts, histórico de crédito, dados de veículos) são impossíveis de replicar por novos entrantes.</p>
+        </div>
+
+        <div class="card p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="moat-icon" style="background:var(--green-light);">
+                    <svg class="w-5 h-5" style="color:var(--green);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900">Elevados Switching Costs</h4>
+                    <span style="background:var(--green-light); color:var(--green); font-size:0.65rem; font-weight:700; padding:1px 7px; border-radius:99px;">FORTE</span>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">Capital IQ Pro e Commodity Insights estão integrados profundamente nos workflows diários e arquiteturas de TI de bancos, gestoras e corporações. Migrar de fornecedor implica elevados custos de readaptação, risco operacional, perda de continuidade de séries históricas e necessidade de re-treinar equipas inteiras.</p>
+        </div>
+
+        <div class="card p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="moat-icon" style="background:var(--gold-light);">
+                    <svg class="w-5 h-5" style="color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900">Modelo AUM-Linked (Índices)</h4>
+                    <span style="background:var(--gold-light); color:var(--gold); font-size:0.65rem; font-weight:700; padding:1px 7px; border-radius:99px;">ÚNICO NO SETOR</span>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">O segmento de índices cobra royalties proporcionais ao AUM referenciado (~$16T). Quando os mercados sobem ou os fluxos para ETFs e fundos indexados aumentam, a receita cresce automaticamente — sem custo marginal adicional. É um dos modelos de negócio mais defensivos da indústria financeira global.</p>
+        </div>
+
+        <div class="card p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="moat-icon" style="background:var(--red-light);">
+                    <svg class="w-5 h-5" style="color:var(--red);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900">Barreiras Regulatórias</h4>
+                    <span style="background:var(--red-light); color:var(--red); font-size:0.65rem; font-weight:700; padding:1px 7px; border-radius:99px;">PROTEÇÃO GOVERNAMENTAL</span>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">O credenciamento NRSRO pela SEC é longo, caro e politicamente complexo. O equivalente europeu (ESMA) impõe barreiras similares. O peso burocrático favorece os três incumbentes históricos e desincentiva novos entrantes. Regulações pós-2008 (Dodd-Frank) reforçaram os requisitos sem alterar o modelo fundamental.</p>
+        </div>
+
+        <div class="card p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="moat-icon" style="background:rgba(34,211,238,.15);">
+                    <svg class="w-5 h-5" style="color:var(--cyan);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-slate-900">Dados Proprietários Únicos</h4>
+                    <span style="background:rgba(34,211,238,.15); color:var(--cyan); font-size:0.65rem; font-weight:700; padding:1px 7px; border-radius:99px;">IRREPRODUZÍVEL</span>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">Décadas de preços Platts em energia, histórico completo de veículos (Carfax, &gt;40B registos), dados de registo automóvel governamental e séries longas de crédito são ativos que se apreciam com o tempo. Quanto mais profundo o histórico, maior o valor analítico e preditivo — e mais difícil de replicar.</p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────
+     COMPARAÇÃO FINANCEIRA
+──────────────────────────────────────────────── -->
+<section id="comparacao" class="mb-12">
+    <p class="section-title">Comparativo Financeiro — Pares do Setor</p>
+    <p class="section-sub">Dados TTM consolidados com referência a Abril de 2026 · Fontes: Bloomberg, relatórios anuais 2025</p>
+
+    <div class="card overflow-x-auto mb-5">
+        <table class="w-full text-left" style="border-collapse:collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border);">
+                    <th style="min-width:180px;">Empresa</th>
+                    <th class="text-right">Mkt Cap</th>
+                    <th class="text-right">Receita TTM</th>
+                    <th class="text-right" data-tip="Preço / Lucro por Ação (trailing 12m)">P/E</th>
+                    <th class="text-right" data-tip="Enterprise Value / EBITDA">EV/EBITDA</th>
+                    <th class="text-right" data-tip="Return On Invested Capital">ROIC</th>
+                    <th class="text-right">Mg. Op. Aj.</th>
+                    <th class="text-right">Rev. YoY</th>
+                    <th class="text-right">Div. Yield</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background:var(--blue-light); border-bottom:1px solid var(--blue-light);">
+                    <td style="padding:0.85rem 1rem;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="https://www.google.com/s2/favicons?domain=spglobal.com&sz=32" class="tbl-logo" alt="SPGI">
+                            <span style="font-weight:700; color:var(--blue);">S&amp;P Global (SPGI)</span>
+                        </div>
+                    </td>
+                    <td class="text-right font-semibold" style="color:var(--blue);">~$132B</td>
+                    <td class="text-right" style="font-weight:600;">$15.34B</td>
+                    <td class="text-right">29.8x</td>
+                    <td class="text-right">~22x</td>
+                    <td class="text-right">11.4%</td>
+                    <td class="text-right" style="font-weight:700; color:var(--blue);">50.4%</td>
+                    <td class="text-right" style="color:var(--green); font-weight:600;">+8.0%</td>
+                    <td class="text-right">~0.9%</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--bg-3);">
+                    <td style="padding:0.85rem 1rem;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="https://www.google.com/s2/favicons?domain=moodys.com&sz=32" class="tbl-logo" alt="MCO">
+                            <span style="font-weight:600;">Moody's Corp. (MCO)</span>
+                        </div>
+                    </td>
+                    <td class="text-right">~$79B</td>
+                    <td class="text-right">$7.87B</td>
+                    <td class="text-right">32.7x</td>
+                    <td class="text-right">~26x</td>
+                    <td class="text-right">26.2%</td>
+                    <td class="text-right">~45%</td>
+                    <td class="text-right" style="color:var(--green);">+9.0%</td>
+                    <td class="text-right">~0.9%</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--bg-3);">
+                    <td style="padding:0.85rem 1rem;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="https://www.google.com/s2/favicons?domain=msci.com&sz=32" class="tbl-logo" alt="MSCI">
+                            <span style="font-weight:600;">MSCI Inc. (MSCI)</span>
+                        </div>
+                    </td>
+                    <td class="text-right">~$40B</td>
+                    <td class="text-right">~$2.8B</td>
+                    <td class="text-right">33.2x</td>
+                    <td class="text-right">~30x</td>
+                    <td class="text-right">41.2%</td>
+                    <td class="text-right">~54%</td>
+                    <td class="text-right" style="color:var(--green);">+10%</td>
+                    <td class="text-right">~1.0%</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--bg-3);">
+                    <td style="padding:0.85rem 1rem;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="https://www.google.com/s2/favicons?domain=factset.com&sz=32" class="tbl-logo" alt="FDS">
+                            <span style="font-weight:600;">FactSet Research (FDS)</span>
+                        </div>
+                    </td>
+                    <td class="text-right">~$16B</td>
+                    <td class="text-right">~$2.2B</td>
+                    <td class="text-right">29.5x</td>
+                    <td class="text-right">~19x</td>
+                    <td class="text-right">18.6%</td>
+                    <td class="text-right">~35%</td>
+                    <td class="text-right" style="color:var(--gold);">+4%</td>
+                    <td class="text-right">~1.1%</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--bg-3);">
+                    <td style="padding:0.85rem 1rem;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="https://www.google.com/s2/favicons?domain=verisk.com&sz=32" class="tbl-logo" alt="VRSK">
+                            <span style="font-weight:600;">Verisk Analytics (VRSK)</span>
+                        </div>
+                    </td>
+                    <td class="text-right">~$39B</td>
+                    <td class="text-right">~$3.3B</td>
+                    <td class="text-right">37.0x</td>
+                    <td class="text-right">~28x</td>
+                    <td class="text-right">~20%</td>
+                    <td class="text-right">~55%</td>
+                    <td class="text-right" style="color:var(--green);">+8%</td>
+                    <td class="text-right">~0.6%</td>
+                </tr>
+                <tr>
+                    <td style="padding:0.85rem 1rem;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="https://www.google.com/s2/favicons?domain=morningstar.com&sz=32" class="tbl-logo" alt="MORN">
+                            <span style="font-weight:600;">Morningstar Inc. (MORN)</span>
+                        </div>
+                    </td>
+                    <td class="text-right">~$13B</td>
+                    <td class="text-right">~$2.3B</td>
+                    <td class="text-right">45.0x</td>
+                    <td class="text-right">~24x</td>
+                    <td class="text-right">~15%</td>
+                    <td class="text-right">~28%</td>
+                    <td class="text-right" style="color:var(--green);">+8%</td>
+                    <td class="text-right">~0.6%</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="padding:10px 16px; font-size:0.72rem; color:var(--text-3); background:var(--bg-2); border-top:1px solid var(--border);">
+            * Margem operacional ajustada SPGI baseada no Relatório Anual 2025. Dados de pares estimados com base em relatórios públicos e Bloomberg. P/E e EV/EBITDA referenciados a preços de mercado de Abril 2026. Passe o rato sobre os cabeçalhos para definições.
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="card p-5">
+            <h4 class="font-semibold text-slate-700 mb-3 text-sm">Margem Operacional Ajustada — Comparativo (%)</h4>
+            <div class="chart-wrap" style="height:210px;"><canvas id="chartMargins"></canvas></div>
+        </div>
+        <div class="card p-5">
+            <h4 class="font-semibold text-slate-700 mb-3 text-sm">Crescimento de Receita YoY — Comparativo (%)</h4>
+            <div class="chart-wrap" style="height:210px;"><canvas id="chartGrowth"></canvas></div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────
+     SWOT
+──────────────────────────────────────────────── -->
+<section id="swot" class="mb-12">
+    <p class="section-title">Análise SWOT</p>
+    <p class="section-sub">Enquadramento estratégico 2026 — forças, fraquezas, oportunidades e ameaças</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <!-- Forças -->
+        <div class="swot-box" style="background:var(--blue-light); border:1px solid var(--blue-light);">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="swot-letter" style="background:var(--blue); color:white;">S</div>
+                <div>
+                    <h4 class="font-bold text-blue-900">Forças <span class="font-normal text-blue-700">(Strengths)</span></h4>
+                    <p class="text-xs text-blue-600">Vantagens internas duradouras</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">Oligopólio nos ratings com barreira regulatória NRSRO praticamente intransponível</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">&gt;75% da receita de caráter recorrente (subscriptions e AUM-linked fees)</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">Margem operacional ajustada superior a 50% — entre as mais altas do S&amp;P 500</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">52 anos consecutivos de crescimento do dividendo (Dividend King)</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">Portfólio diversificado em cinco segmentos complementares com sinergias de dados</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">Integração IHS Markit concluída — $810M run-rate em sinergias anuais (target $355M atingido antecipadamente); plataformas unificadas</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">FCF conversion &gt;90% do lucro líquido ajustado — negócio capital-light por natureza</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--blue);"></div><p class="text-blue-900">Kensho AI e Capital IQ Copilot como vetores de diferenciação tecnológica</p></div>
+            </div>
+        </div>
+
+        <!-- Fraquezas -->
+        <div class="swot-box" style="background:var(--gold-light); border:1px solid var(--gold-light);">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="swot-letter" style="background:var(--gold); color:white;">W</div>
+                <div>
+                    <h4 class="font-bold text-amber-900">Fraquezas <span class="font-normal text-amber-700">(Weaknesses)</span></h4>
+                    <p class="text-xs text-amber-600">Vulnerabilidades internas a gerir</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="swot-item"><div class="swot-dot" style="background:var(--gold);"></div><p class="text-amber-900">Segmento Ratings altamente cíclico — exposto diretamente ao volume de emissões de dívida</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--gold);"></div><p class="text-amber-900">Market Intelligence com crescimento orgânico mais lento vs. Bloomberg e LSEG</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--gold);"></div><p class="text-amber-900">Endividamento líquido ainda relevante pós-fusão IHS Markit ($44B em 2022)</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--gold);"></div><p class="text-amber-900">Guidance 2026 abaixo do consenso — causou correção de -13% nas ações em fevereiro 2026</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--gold);"></div><p class="text-amber-900">Dependência regulatória — qualquer revisão do modelo NRSRO impacta estruturalmente o negócio</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--gold);"></div><p class="text-amber-900">Complexidade de gerir cinco divisões com culturas, modelos e ciclos distintos</p></div>
+            </div>
+        </div>
+
+        <!-- Oportunidades -->
+        <div class="swot-box" style="background:var(--green-light); border:1px solid var(--green-light);">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="swot-letter" style="background:var(--green); color:white;">O</div>
+                <div>
+                    <h4 class="font-bold text-emerald-900">Oportunidades <span class="font-normal text-emerald-700">(Opportunities)</span></h4>
+                    <p class="text-xs text-emerald-600">Vetores de crescimento a capturar</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">Expansão para mercados privados (PE, private credit, infra) — TAM de &gt;$13T em AUM alternativos</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">IA generativa e Capital IQ Copilot como motor de upsell e retenção de clientes</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">Migração secular para ETFs e gestão passiva (~$16T já referenciados no S&amp;P DJI)</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">Dados ESG, carbono e transição energética — procura crescente de reguladores e corporações</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">Expansão geográfica em mercados emergentes — Índia, Middle East e ASEAN com emissão de dívida a crescer</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">Aquisições bolt-on de dados alternativos e plataformas de workflow especializadas</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--green);"></div><p class="text-emerald-900">Crescimento de derivados e produtos estruturados vinculados a índices SPGI</p></div>
+            </div>
+        </div>
+
+        <!-- Ameaças -->
+        <div class="swot-box" style="background:var(--red-light); border:1px solid var(--red-light);">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="swot-letter" style="background:var(--red); color:white;">T</div>
+                <div>
+                    <h4 class="font-bold text-red-900">Ameaças <span class="font-normal text-red-700">(Threats)</span></h4>
+                    <p class="text-xs text-red-600">Riscos externos a monitorizar</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Taxas de juro elevadas prolongadas reduzem emissão de dívida e receitas de Ratings</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Disrupção por IA — entrantes LLM-nativos (AlphaSense, Tegus) a atacar nichos de Market Intelligence</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Pressão regulatória EU/EUA sobre conflito de interesses no modelo issuer-pays dos ratings</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Bloomberg e LSEG posicionados como one-stop-shop — podem pressionar preços em Market Intelligence</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Arrefecimento dos mercados de capitais — reduz M&amp;A, IPOs e emissões estruturadas (CLO, ABS)</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Risco antitrust — dimensão e poder de mercado pode atrair escrutínio regulatório crescente</p></div>
+                <div class="swot-item"><div class="swot-dot" style="background:var(--red);"></div><p class="text-red-900">Risco cambial — receitas globais expostas a flutuações do USD (&gt;33% fora dos EUA)</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────
+     REAÇÃO DO MERCADO
+──────────────────────────────────────────────── -->
+<section id="mercado" class="mb-12">
+    <p class="section-title">Reação do Mercado e Efeito de Contágio no Setor</p>
+    <p class="section-sub">Análise do comportamento das ações após os resultados de Q4 2025 e guidance 2026</p>
+
+    <div class="dark-card p-6 sm:p-8">
+
+        <!-- Contexto -->
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-3">
+                <div style="width:3px; height:20px; background:var(--blue); border-radius:2px;"></div>
+                <h3 style="color:var(--blue); font-size:1rem; font-weight:600;">Contexto: Earnings Call Q4 2025 (Fevereiro 2026)</h3>
+            </div>
+            <p style="color:var(--border-strong); font-size:0.84rem; line-height:1.7;">
+                A SPGI reportou EPS ajustado de <strong style="color:white;">$17.83 (+14% YoY)</strong> e receita de <strong style="color:white;">$15.34B (+8%)</strong> — ambos acima das estimativas de consenso. Contudo, o <em>guidance</em> para 2026 com EPS de <strong style="color:white;">$19.40–$19.65</strong> ficou abaixo do consenso de Wall Street ($19.96), e o crescimento orgânico projetado de 6%–8% desiludiu os investidores mais otimistas que esperavam aceleração. A gestão alertou adicionalmente para potenciais ventos contrários no segmento de Ratings caso as taxas de juro permaneçam restritivas e os volumes de refinanciamento abrandem face ao pico de 2025. A reação foi desproporcional face aos fundamentais — o mercado puniu um resultado robusto pela prudência do guidance.
+            </p>
+        </div>
+
+        <!-- Grid impacto + contágio -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:20px;">
+                <h4 style="color:white; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                    <svg style="width:18px;height:18px;color:var(--gold);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    Impacto no Preço das Ações SPGI
+                </h4>
+                <div class="dark-row"><span style="color:var(--text-3);">Queda no dia do earnings call</span><span style="color:var(--red); font-weight:700;">–7.4%</span></div>
+                <div class="dark-row"><span style="color:var(--text-3);">Queda máxima intraday (pico de pressão)</span><span style="color:var(--red); font-weight:700;">–13%</span></div>
+                <div class="dark-row"><span style="color:var(--text-3);">Nível de suporte técnico encontrado</span><span style="color:white; font-weight:600;">$436–$440</span></div>
+                <div class="dark-row"><span style="color:var(--text-3);">Recuperação parcial (Abril 2026)</span><span style="color:var(--green); font-weight:600;">Estabilizado ~$455</span></div>
+                <div class="dark-row"><span style="color:var(--text-3);">Múltiplo atual vs. média histórica 5a</span><span style="color:var(--blue); font-weight:600;">29.8x (desconto ~15%)</span></div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:20px;">
+                <h4 style="color:white; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                    <svg style="width:18px;height:18px;color:var(--blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
+                    Efeito de Contágio — Pares do Setor
+                </h4>
+                <div class="dark-row">
+                    <span style="color:var(--text-3); display:flex; align-items:center; gap:6px;"><img src="https://www.google.com/s2/favicons?domain=moodys.com&sz=16" style="width:14px;height:14px;border-radius:2px;" alt="MCO"> Moody's Corp. (MCO)</span>
+                    <span style="color:var(--red); font-weight:700;">–5.1%</span>
+                </div>
+                <div class="dark-row">
+                    <span style="color:var(--text-3); display:flex; align-items:center; gap:6px;"><img src="https://www.google.com/s2/favicons?domain=msci.com&sz=16" style="width:14px;height:14px;border-radius:2px;" alt="MSCI"> MSCI Inc.</span>
+                    <span style="color:var(--red); font-weight:700;">–2.7%</span>
+                </div>
+                <div class="dark-row">
+                    <span style="color:var(--text-3); display:flex; align-items:center; gap:6px;"><img src="https://www.google.com/s2/favicons?domain=factset.com&sz=16" style="width:14px;height:14px;border-radius:2px;" alt="FDS"> FactSet (FDS)</span>
+                    <span style="color:var(--red); font-weight:700;">–2.0%</span>
+                </div>
+                <div class="dark-row">
+                    <span style="color:var(--text-3); display:flex; align-items:center; gap:6px;"><img src="https://www.google.com/s2/favicons?domain=verisk.com&sz=16" style="width:14px;height:14px;border-radius:2px;" alt="VRSK"> Verisk Analytics (VRSK)</span>
+                    <span style="color:var(--red); font-weight:700;">–1.5%</span>
+                </div>
+                <div class="dark-row">
+                    <span style="color:var(--text-3); display:flex; align-items:center; gap:6px;"><img src="https://www.google.com/s2/favicons?domain=morningstar.com&sz=16" style="width:14px;height:14px;border-radius:2px;" alt="MORN"> Morningstar (MORN)</span>
+                    <span style="color:var(--gold); font-weight:700;">–0.8%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Catalisadores -->
+        <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:20px;">
+            <p style="color:var(--text-3); font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Catalisadores Chave a Monitorizar em 2026</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--border-strong);">
+                    <span style="color:var(--blue); margin-top:2px; flex-shrink:0;">→</span>
+                    <span>Decisões da Fed sobre taxa de referência — impacto direto no volume de emissões de dívida corporativa e estruturada</span>
+                </div>
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--border-strong);">
+                    <span style="color:var(--blue); margin-top:2px; flex-shrink:0;">→</span>
+                    <span>Volume de CLOs, ABS e CMBS — indicador antecipado das receitas de transação do segmento Ratings</span>
+                </div>
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--border-strong);">
+                    <span style="color:var(--blue); margin-top:2px; flex-shrink:0;">→</span>
+                    <span>Crescimento dos AUM globais em ETFs e fundos passivos — afeta diretamente as receitas do segmento Índices</span>
+                </div>
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--border-strong);">
+                    <span style="color:var(--blue); margin-top:2px; flex-shrink:0;">→</span>
+                    <span>Execução do buyback de $5B aprovado — suporte ao EPS e ao preço das ações em caso de volatilidade</span>
+                </div>
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--border-strong);">
+                    <span style="color:var(--blue); margin-top:2px; flex-shrink:0;">→</span>
+                    <span>Aquisições bolt-on em dados alternativos, mercados privados e IA — expansão do TAM em Market Intelligence</span>
+                </div>
+                <div style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--border-strong);">
+                    <span style="color:var(--blue); margin-top:2px; flex-shrink:0;">→</span>
+                    <span>Taxa de adoção do Capital IQ Copilot — indicador de diferenciação e poder de retenção vs. Bloomberg</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────
+     FOOTER
+──────────────────────────────────────────────── -->
+<footer style="padding-top:2rem; border-top:1px solid var(--border); margin-top:2rem;">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-4">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <div class="logo-badge" style="background:var(--blue); opacity:0.7; font-size:0.6rem;">SP</div>
+                <span style="font-size:0.85rem; font-weight:600; color:var(--text-2);">S&amp;P Global (SPGI) — Relatório Estratégico Competitivo</span>
+            </div>
+            <p style="font-size:0.75rem; color:var(--text-3); max-width:560px; line-height:1.6;">
+                Documento de análise compilado em Abril de 2026. Fontes: <em>Form 10-K</em> fiscal 2025 (SEC EDGAR), Earnings Call Q4 2025 Transcript, Bloomberg Intelligence, estimativas sell-side consolidadas (Goldman Sachs, JPMorgan, Barclays). Este documento é estritamente informativo e não constitui aconselhamento de investimento.
+            </p>
+        </div>
+        <div style="text-align:right; flex-shrink:0;">
+            <p style="font-size:0.73rem; color:var(--text-3);">Atualizado: Abril 2026</p>
+            <p style="font-size:0.73rem; color:var(--text-3);">Próxima revisão: Agosto 2026 (Q2 earnings)</p>
+        </div>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <span style="background:var(--bg-3); color:var(--text-3); font-size:0.72rem; padding:4px 12px; border-radius:99px;">SEC EDGAR 10-K 2025</span>
+        <span style="background:var(--bg-3); color:var(--text-3); font-size:0.72rem; padding:4px 12px; border-radius:99px;">Q4 2025 Earnings Call Transcript</span>
+        <span style="background:var(--bg-3); color:var(--text-3); font-size:0.72rem; padding:4px 12px; border-radius:99px;">Bloomberg Intelligence</span>
+        <span style="background:var(--bg-3); color:var(--text-3); font-size:0.72rem; padding:4px 12px; border-radius:99px;">investor.spglobal.com (IR)</span>
+    </div>
+</footer>
+
+</div><!-- /max-w -->
+
+
+<!-- ────────────────────────────────────────────────
+     SCRIPTS
+──────────────────────────────────────────────── -->
+<script>
+/* ── NAV SCROLL ────────────────────────────────── */
+function goTo(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var offset = 60; // nav height
+    var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+}
+
+/* ── ACTIVE NAV ON SCROLL ──────────────────────── */
+var sectionIds = ['kpis', 'segmentos', 'moat', 'comparacao', 'swot', 'mercado'];
+var navBtns = document.querySelectorAll('.nav-link');
+
+window.addEventListener('scroll', function () {
+    var current = '';
+    sectionIds.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 80) current = id;
+    });
+    navBtns.forEach(function (btn) {
+        var onclick = btn.getAttribute('onclick') || '';
+        var matches = onclick.indexOf("'" + current + "'") !== -1;
+        btn.classList.toggle('active', matches);
+    });
+});
+
+/* ── CHART.JS DEFAULTS ─────────────────────────── */
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.labels.boxWidth = 11;
+Chart.defaults.plugins.legend.labels.padding = 10;
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+
+/* Read CSS custom properties as literal hex (Chart.js doesn't parse var()) */
+function spgiPalette() {
+    var s = getComputedStyle(document.documentElement);
+    return {
+        bg:        s.getPropertyValue('--bg').trim()        || '#0a0f1f',
+        bg3:       s.getPropertyValue('--bg-3').trim()      || '#141d35',
+        bgCard:    s.getPropertyValue('--bg-card').trim()   || '#101830',
+        text:      s.getPropertyValue('--text').trim()      || '#e6ecf5',
+        text2:     s.getPropertyValue('--text-2').trim()    || '#a3b3cc',
+        textMuted: s.getPropertyValue('--text-3').trim()    || '#6b7a99',
+        border:    s.getPropertyValue('--border').trim()    || '#1f2d4d',
+        blue:      s.getPropertyValue('--blue').trim()      || '#60a5fa',
+        cyan:      s.getPropertyValue('--cyan').trim()      || '#22d3ee',
+        green:     s.getPropertyValue('--green').trim()     || '#34d399',
+        gold:      s.getPropertyValue('--gold').trim()      || '#fbbf24',
+        orange:    s.getPropertyValue('--orange').trim()    || '#fb923c',
+        red:       s.getPropertyValue('--red').trim()       || 'var(--red)',
+        purple:    s.getPropertyValue('--purple').trim()    || '#c084fc',
+        pink:      s.getPropertyValue('--pink').trim()      || '#f472b6'
+    };
+}
+
+var spgiCharts = {};
+
+function buildSpgiCharts() {
+    var p = spgiPalette();
+    Chart.defaults.color = p.text2;
+    Chart.defaults.plugins.tooltip.backgroundColor = p.bg3;
+    Chart.defaults.plugins.tooltip.titleColor = p.text;
+    Chart.defaults.plugins.tooltip.bodyColor = p.text;
+    Chart.defaults.plugins.tooltip.borderColor = p.border;
+    Chart.defaults.plugins.tooltip.borderWidth = 1;
+
+    /* destroy existing instances before rebuild */
+    Object.keys(spgiCharts).forEach(function(k){ if (spgiCharts[k]) spgiCharts[k].destroy(); });
+
+    /* 1. Ratings Market Share */
+    spgiCharts.ratings = new Chart(document.getElementById('chartRatingsShare'), {
+        type: 'doughnut',
+        data: {
+            labels: ["S&P Global (~46%)", "Moody's (~40%)", "Fitch (~14%)"],
+            datasets: [{
+                data: [46, 40, 14],
+                backgroundColor: [p.blue, p.orange, p.textMuted],
+                borderWidth: 3,
+                borderColor: p.bgCard,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            cutout: '65%', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { font: { size: 9 }, padding: 6, color: p.text2 } } }
+        }
+    });
+
+    /* 2. Indices AUM Share */
+    spgiCharts.indices = new Chart(document.getElementById('chartIndicesShare'), {
+        type: 'doughnut',
+        data: {
+            labels: ["S&P DJI (~$16T)", "MSCI (~$14T)", "FTSE Russell (~$10T)", "Outros (~$6T)"],
+            datasets: [{
+                data: [35, 30, 22, 13],
+                backgroundColor: [p.blue, p.purple, p.pink, p.textMuted],
+                borderWidth: 3,
+                borderColor: p.bgCard,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            cutout: '65%', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { font: { size: 9 }, padding: 5, color: p.text2 } } }
+        }
+    });
+
+    /* 3. Margins Comparison */
+    spgiCharts.margins = new Chart(document.getElementById('chartMargins'), {
+        type: 'bar',
+        data: {
+            labels: ['Verisk', 'MSCI', 'SPGI', 'MCO', 'FDS', 'MORN'],
+            datasets: [{
+                label: 'Margem Op. Ajustada',
+                data: [55, 54, 50.4, 45, 35, 28],
+                backgroundColor: [p.green, p.purple, p.blue, p.orange, p.cyan, p.gold],
+                borderRadius: 6, borderSkipped: false
+            }]
+        },
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: function(ctx){ return ' ' + ctx.parsed.x + '%'; } } }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true, max: 70,
+                    ticks: { callback: function(v){ return v + '%'; }, color: p.text2 },
+                    grid: { color: p.border }
+                },
+                y: { grid: { display: false }, ticks: { color: p.text2 } }
+            }
+        }
+    });
+
+    /* 4. Revenue Growth Comparison */
+    spgiCharts.growth = new Chart(document.getElementById('chartGrowth'), {
+        type: 'bar',
+        data: {
+            labels: ['MSCI', 'MCO', 'SPGI', 'Verisk', 'MORN', 'FDS'],
+            datasets: [{
+                label: 'Crescimento Receita YoY',
+                data: [10, 9, 8, 8, 8, 4],
+                backgroundColor: [p.purple, p.orange, p.blue, p.green, p.gold, p.textMuted],
+                borderRadius: 6, borderSkipped: false
+            }]
+        },
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: function(ctx){ return ' +' + ctx.parsed.x + '%'; } } }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true, max: 14,
+                    ticks: { callback: function(v){ return '+' + v + '%'; }, color: p.text2 },
+                    grid: { color: p.border }
+                },
+                y: { grid: { display: false }, ticks: { color: p.text2 } }
+            }
+        }
+    });
+}
+
+buildSpgiCharts();
+
+/* Re-render charts when the theme attribute changes */
+new MutationObserver(function(muts){
+    for (var i = 0; i < muts.length; i++) {
+        if (muts[i].attributeName === 'data-theme') { buildSpgiCharts(); break; }
+    }
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>
+<button id="spgi-theme-toggle" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema" style="position:fixed;top:14px;right:14px;z-index:9999;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .15s ease,background-color .25s,color .25s,border-color .25s;font-family:system-ui,-apple-system,'Segoe UI Emoji','Apple Color Emoji',sans-serif;line-height:1;padding:0">☀</button>
+<script>(function(){function apply(t){var b=document.getElementById('spgi-theme-toggle');if(b)b.textContent=t==='dark'?'☀':'☾';}var cur=document.documentElement.getAttribute('data-theme')||'dark';apply(cur);var btn=document.getElementById('spgi-theme-toggle');if(btn){btn.addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme')||'dark';var n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);apply(n);try{localStorage.setItem('spgi-theme',n)}catch(e){}});btn.addEventListener('mouseenter',function(){btn.style.transform='scale(1.08)'});btn.addEventListener('mouseleave',function(){btn.style.transform='scale(1)'});}})();</script>
+
+</body>
+</html>
